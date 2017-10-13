@@ -1,0 +1,165 @@
+
+  <p>
+      R1: Use WASD keys to move.
+</p>
+  <p>
+      R2: Use the arrow keys to move.
+</p>
+<script src="http://rawgit.com/jonleung/33aa8dcb08ce87d689a6/raw/9a3acc3f39ea114aadc1ab87c75f518c553f54ca/p5.js"></script>
+  <script src="http://rawgit.com/jonleung/33aa8dcb08ce87d689a6/raw/9a3acc3f39ea114aadc1ab87c75f518c553f54ca/p5.play.js"></script>
+<script>
+	var player1;
+	var player2;
+	var ball;
+
+	var goal1;
+	var goal2;
+
+	var p1Score = 0;
+	var p2Score = -1;
+	var win = "";
+
+	var wallUp;
+	var wallDn;
+	var WallLft;
+	var wallRt;
+
+	var obstLft;
+	var obstRt;
+
+	var collider = 0;
+	function setup() {
+	  createCanvas(1000, 400);
+
+	  player1 = createSprite(width/4, height/2, 35, 35);
+	  player2 = createSprite(3*width/4, height/2, 35, 35);
+	  ball = createSprite(5, height/2, 20, 20);
+	  goal1 = createSprite(width - 5, height/2, 10, height/4);
+	  goal2 = createSprite(5, height/2, 10, height/4);
+	  
+	  wallUp = createSprite(width/2,0,width,1);
+	  wallDn = createSprite(width/2,height,width,1);
+	  wallLft = createSprite(0,height/2,1,height);
+	  wallRt = createSprite(width,height/2,1,height);
+	    
+	}
+
+	function draw() {
+	  
+	  if(keyDown("a")){
+	    player1.position.x -= 4*Math.random();
+	  }
+	  if(keyDown("d")){
+	    player1.position.x += 4*Math.random();
+	  }
+	  if(keyDown("w")){
+	    player1.position.y -= 4*Math.random();
+	  }
+	  if(keyDown("s")){
+	    player1.position.y += 4*Math.random();
+	  }
+	  
+	  if(keyDown(LEFT_ARROW)){
+	    player2.position.x -= 4*Math.random();
+	  }
+	  if(keyDown(RIGHT_ARROW)){
+	    player2.position.x += 4*Math.random();
+	  }
+	  if(keyDown(UP_ARROW)){
+	    player2.position.y -= 4*Math.random();
+	  }
+	  if(keyDown(DOWN_ARROW)){
+	    player2.position.y += 4*Math.random();
+	  }
+	    
+	    player1.displace(ball);
+	    player2.displace(ball);
+	  
+	    player1.collide(wallUp);
+	    player1.collide(wallDn);
+	    player1.collide(wallLft);
+	    player1.collide(wallRt);
+	    
+	    player2.collide(wallUp);
+	    player2.collide(wallDn);
+	    player2.collide(wallLft);
+	    player2.collide(wallRt);
+
+	    ball.collide(wallUp);
+	    ball.collide(wallDn);
+	    ball.collide(wallLft);
+	    ball.collide(wallRt);
+
+	  // Scoring
+	  if(ball.overlap(goal1)){
+	    p1Score += 1;
+	    ball.position.x = width/2;
+	    ball.position.y = height/2;
+	    
+	    player1.position.x = width/4;
+	    player1.position.y = height/2;
+	      
+	    player2.position.x = 3*width/4;
+	    player2.position.y = height/2;
+	      collider = Math.random()*10;
+	    if(collider%2 == 0){
+	        player2.collide(player1);
+	    }
+	    else{
+	        player1.collide(player2);
+	    }
+	    
+
+	  }
+	  if(ball.overlap(goal2)){
+	    p2Score += 1;
+	    ball.position.x = width/2;
+	    ball.position.y = height/2;
+	      
+	    player1.position.x = width/4;
+	    player1.position.y = height/2;
+	      
+	    player2.position.x = 3*width/4;
+	    player2.position.y = height/2;
+	      collider = Math.random()*10;
+	    if(collider%2 == 0){
+	        player2.collide(player1);
+	    }
+	    else{
+	        player1.collide(player2);
+	    }
+	  }  
+	  
+	  if(ball.position.x < 0 || ball.position.x > width || ball.position.y < 0 || ball.position.y > height){
+	      ball.position.x = width/2;
+	      ball.position.y = height/2;
+	  }
+	    
+	    if(player1.position.x < 0 || player1.position.x > width || player1.position.y < 0 || player1.position.y > height){
+	      player1.position.x = width/4;
+	      player1.position.y = height/2;
+	  }
+	    if(player2.position.x < 0 || player2.position.x > width || player2.position.y < 0 || player2.position.y > height){
+	      player2.position.x = width/4;
+	      player2.position.y = height/2;
+	  }
+	    if(p1Score > 2){
+	        win = "P1 WINS!!!";
+	        p1Score = 0;
+	        p2Score = 0;
+	    }
+	    if(p2Score > 2){
+	        win = "P2 WINS!!!";
+	        p1Score = 0;
+	        p2Score = 0;
+	    }
+	    
+	  // Draw Game
+	  background(100, 240, 220);
+	  drawSprites();
+	  text("P1 SCORE: " + p1Score, width/8, 20);
+	  text("P2 SCORE: " + p2Score, 7*width/8, 20);
+	    text(win,width/2,height/4);
+	}
+
+</script>
